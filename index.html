@@ -30,12 +30,72 @@
             id: sessionId,
           },
         });
+
+        // Countdown timer function
+        function startTimer(duration, display) {
+          let timer = duration;
+          const countdownInterval = setInterval(function () {
+            display.textContent = timer;
+            if (--timer < 0) {
+              clearInterval(countdownInterval);
+              // Trigger payment page after countdown ends
+              Checkout.showPaymentPage();
+            }
+          }, 1000);
+        }
+
+        // Trigger timer on page load
+        document.addEventListener("DOMContentLoaded", function () {
+          const timerDisplay = document.querySelector("#timer");
+          if (timerDisplay) {
+            startTimer(10, timerDisplay); // Start timer for 10 seconds
+          }
+        });
       } else {
         console.error("Session ID not found in URL");
       }
     </script>
+    <!-- <script type="text/javascript">
+      function errorCallback(error) {
+        console.log(JSON.stringify(error));
+      }
+      function cancelCallback() {
+        console.log("Payment cancelled");
+      }
+
+      // Function to get query parameters from URL
+      function getQueryParam(param) {
+        const queryString = window.location.search;
+        const urlParams = new URLSearchParams(queryString);
+        return urlParams.get(param);
+      }
+
+      // Get the session ID from the URL
+      const sessionId = getQueryParam("session_id");
+
+      // Configure Checkout with the session ID
+      if (sessionId) {
+        Checkout.configure({
+          session: {
+            id: sessionId,
+          },
+        });
+      } else {
+        console.error("Session ID not found in URL");
+      }
+    </script> -->
+    <!-- <script type="text/javascript">
+      // Check if sessionId is available
+      if (sessionId) {
+        // Delay execution of the function by 1 second
+        setTimeout(function () {
+          // Trigger click event on the button
+          document.querySelector('input[type="button"]').click();
+        }, 1000); // 1000 milliseconds = 1 second
+      }
+    </script> -->
   </head>
-  <body>
+  <body style="margin: 0">
     <div id="embed-target"></div>
     <div
       style="
@@ -45,7 +105,7 @@
         justify-content: center;
         min-height: 100vh;
         margin: 0;
-        background-color: #fef3c7;
+        background-color: #abdfde;
       "
     >
       <div
@@ -70,6 +130,10 @@
         <p style="color: #000; font-size: 26px">
           Please verify your payment to continue
         </p>
+        <p style="color: #000; font-size: 16px">
+          Redirecting to payment page in
+          <b style="color: #58c8c8" id="timer">10</b> seconds
+        </p>
         <!-- Rendering seconds conditionally -->
         <!-- <p style="color: #000; font-size: 16px">
           Redirecting to payment page in
@@ -80,7 +144,7 @@
           type="button"
           value="Pay with Payment Page"
           style="
-            background-color: #c6a34f;
+            background-color: #58c8c8;
             color: #fff;
             border: none;
             padding: 10px 20px;
